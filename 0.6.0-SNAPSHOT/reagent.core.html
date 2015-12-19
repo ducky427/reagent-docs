@@ -55,7 +55,8 @@ value) when the cursor is modified.
 
 Given that set-get function, (and that state is a Reagent atom, or
 another cursor) these cursors are equivalent:
-(cursor state [:foo]) and (cursor set-get [:foo]).</pre></div></div><div class="public anchor" id="var-dispose.21"><h3>dispose!</h3><div class="usage"><code>(dispose! x)</code></div><div class="doc"><pre class="plaintext"></pre></div></div><div class="public anchor" id="var-dom-node"><h3>dom-node</h3><div class="usage"><code>(dom-node this)</code></div><div class="doc"><pre class="plaintext">Returns the root DOM node of a mounted component.
+(cursor state [:foo]) and (cursor set-get [:foo]).</pre></div></div><div class="public anchor" id="var-dispose.21"><h3>dispose!</h3><div class="usage"><code>(dispose! x)</code></div><div class="doc"><pre class="plaintext">Stop the result of track! from updating.
+</pre></div></div><div class="public anchor" id="var-dom-node"><h3>dom-node</h3><div class="usage"><code>(dom-node this)</code></div><div class="doc"><pre class="plaintext">Returns the root DOM node of a mounted component.
 </pre></div></div><div class="public anchor" id="var-flush"><h3>flush</h3><div class="usage"><code>(flush)</code></div><div class="doc"><pre class="plaintext">Render dirty components immediately to the DOM.
 
 Note that this may not work in event handlers, since React.js does
@@ -91,7 +92,19 @@ rswap! works like swap!, except that recursive calls to rswap! on
 the same atom are allowed – and it always returns nil.</pre></div></div><div class="public anchor" id="var-set-state"><h3>set-state</h3><div class="usage"><code>(set-state this new-state)</code></div><div class="doc"><pre class="plaintext">Merge component state with new-state.
 Equivalent to (swap! (state-atom this) merge new-state)</pre></div></div><div class="public anchor" id="var-state"><h3>state</h3><div class="usage"><code>(state this)</code></div><div class="doc"><pre class="plaintext">Returns the state of a component, as set with replace-state or set-state.
 Equivalent to (deref (r/state-atom this))</pre></div></div><div class="public anchor" id="var-state-atom"><h3>state-atom</h3><div class="usage"><code>(state-atom this)</code></div><div class="doc"><pre class="plaintext">Returns an atom containing a components state.
-</pre></div></div><div class="public anchor" id="var-track"><h3>track</h3><div class="usage"><code>(track f &amp; args)</code></div><div class="doc"><pre class="plaintext"></pre></div></div><div class="public anchor" id="var-track.21"><h3>track!</h3><div class="usage"><code>(track! f &amp; args)</code></div><div class="doc"><pre class="plaintext"></pre></div></div><div class="public anchor" id="var-unmount-component-at-node"><h3>unmount-component-at-node</h3><div class="usage"><code>(unmount-component-at-node container)</code></div><div class="doc"><pre class="plaintext">Remove a component from the given DOM node.
+</pre></div></div><div class="public anchor" id="var-track"><h3>track</h3><div class="usage"><code>(track f &amp; args)</code></div><div class="doc"><pre class="plaintext">Takes a function and optional arguments, and returns a derefable
+containing the output of that function. If the function derefs
+Reagent atoms (or track, etc), the value will be updated whenever
+the atom changes.
+
+In other words, @(track foo bar) will produce the same result
+as (foo bar), but foo will only be called again when the atoms it
+depends on changes, and will only trigger updates of components when
+its result changes.
+
+track is lazy, i.e the function is only evaluated on deref.</pre></div></div><div class="public anchor" id="var-track.21"><h3>track!</h3><div class="usage"><code>(track! f &amp; args)</code></div><div class="doc"><pre class="plaintext">An eager version of track. The function passed is called
+immediately, and continues to be called when needed, until stopped
+with dispose!.</pre></div></div><div class="public anchor" id="var-unmount-component-at-node"><h3>unmount-component-at-node</h3><div class="usage"><code>(unmount-component-at-node container)</code></div><div class="doc"><pre class="plaintext">Remove a component from the given DOM node.
 </pre></div></div><div class="public anchor" id="var-with-let"><h3>with-let</h3><h4 class="type">macro</h4><div class="usage"><code>(with-let bindings &amp; body)</code></div><div class="doc"><pre class="plaintext"></pre></div></div><div class="public anchor" id="var-with-let"><h3>with-let</h3><h4 class="type">macro</h4><div class="usage"><code>(with-let bindings &amp; body)</code></div><div class="doc"><pre class="plaintext"></pre></div></div><div class="public anchor" id="var-wrap"><h3>wrap</h3><div class="usage"><code>(wrap value reset-fn &amp; args)</code></div><div class="doc"><pre class="plaintext">Provide a combination of value and callback, that looks like an atom.
 
 The first argument can be any value, that will be returned when the
